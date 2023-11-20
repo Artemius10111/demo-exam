@@ -65,7 +65,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         if ($isUserAdmin) {
             $items[] = ['label' => 'Админ панель', 'url' => ['/admin']]; 
         } else {
-            $items[] = ['label' => 'Личный кабинет', 'url' => ['/user']]; 
+            $items[] = ['label' => 'Личный кабинет', 'url' => ['/lk']]; 
         }
         $items[] = $logoutButtonLink;
     }

@@ -52,12 +52,12 @@ class Problem extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'timestamp' => 'Timestamp',
+            'name' => 'Имя',
+            'description' => 'Описание',
+            'timestamp' => 'Дата создания',
             'idUser' => 'Id User',
-            'idCategory' => 'Id Category',
-            'status' => 'Status',
+            'idCategory' => 'Категория',
+            'status' => 'Статус',
             'photoBefore' => 'Photo Before',
             'photoAfter' => 'Photo After',
         ];
@@ -68,7 +68,7 @@ class Problem extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdCategory0()
+    public function getIdCategory()
     {
         return $this->hasOne(Category::class, ['id' => 'idCategory']);
     }
