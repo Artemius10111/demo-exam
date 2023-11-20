@@ -27,7 +27,14 @@ class RegForm extends User
     public function rules()
     {
         return [
-            [['fio', 'login', 'email', 'password'], 'required'],
+            [['fio', 'login', 'email', 'password', 'passwordConfirm', 'agree'], 'required', 'message' => 'Поле обязательно для заполнения'],
+            ['fio', 'match', 'pattern' => '/^[А-Яа-я\s\-]{5,}$/u', 'message' => 'Возможна запись только кириллицы (от 5 символов)'],
+            ['login', 'match', 'pattern' => '/^[a-zA-Z]{1,}$/u', 'message' => 'Только латинские буквы'],
+            ['login', 'unique', 'message' => 'Такой логин уже используется'],
+            ['email', 'email', 'message' => 'Некорректный email'],
+            ['passwordConfirm', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли должны совпадать'],
+            ['agree', 'boolean'],
+            ['agree', 'compare', 'compareValue' => true, 'message' => 'Необходимо согласиться'],
             [['admin'], 'integer'],
             [['fio', 'login', 'email', 'password'], 'string', 'max' => 255],
         ];
