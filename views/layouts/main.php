@@ -40,21 +40,28 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     $items = [];
 
     $isUserGuest = Yii::$app->user->isGuest; 
-    $isUserAdmin = Yii::$app->user->identity -> admin == 1;
 
-    $logoutButtonLink = '<li class="nav-item">'
-    . Html::beginForm(['/site/logout'])
-    . Html::submitButton(
-        'Выйти (' . Yii::$app->user->identity->login . ')',
-        ['class' => 'nav-link btn btn-link logout']
-    )
-    . Html::endForm()
-    . '</li>';
+    $isUserAdmin = false;
+    $doesUserHaveIdentity = Yii::$app->user->identity != null;
+
+    if ($doesUserHaveIdentity) {
+        $isUserAdmin = Yii::$app->user->identity->admin == 1;
+    }
+
 
     if ($isUserGuest) {
         $items[] = ['label' => 'Регистрация', 'url' => ['/user/create']]; 
         $items[] = ['label' => 'Авторизация', 'url' => ['/site/login']];
     } else {
+        $logoutButtonLink = '<li class="nav-item">'
+        . Html::beginForm(['/site/logout'])
+        . Html::submitButton(
+            'Выйти (' . Yii::$app->user->identity->login . ')',
+            ['class' => 'nav-link btn btn-link logout']
+        )
+        . Html::endForm()
+        . '</li>';
+
         if ($isUserAdmin) {
             $items[] = ['label' => 'Админ панель', 'url' => ['/admin']]; 
         } else {
