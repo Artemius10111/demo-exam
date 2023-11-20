@@ -20,7 +20,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'admin')->textInput() ?>
+    <?= $form->field($model, 'passwordConfirm')->passwordInput(['maxlength' => true]) ?>
+    
+    <?= $form->field($model, 'agree')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

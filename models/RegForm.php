@@ -19,7 +19,7 @@ use Yii;
 class RegForm extends User
 {
     public $passwordConfirm;
-    public $agreee;
+    public $agree;
     
     /**
      * {@inheritdoc}

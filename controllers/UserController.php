@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\User;
 use app\models\RegForm;
 use app\models\UserSearch;
 use yii\web\Controller;
