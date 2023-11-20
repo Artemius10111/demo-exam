@@ -2,13 +2,17 @@
 
 namespace app\controllers;
 
+use yii\web\UploadedFile;
 use Yii;
+use app\models\User;
+use app\models\Category;
 use app\models\Problem;
-use app\models\RegForm;
+use app\models\ProblemCreateForm;
 use app\models\ProblemSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -16,47 +20,49 @@ use yii\filters\VerbFilter;
 class LkController extends Controller
 {
 
-    public function beforeAction($action) {
+    public function beforeAction($action)
+    {
+        // your custom code here, if you want the code to run before action filters,
+        // which are triggered on the [[EVENT_BEFORE_ACTION]] event, e.g. PageCache or AccessControl
 
-        $cannotUserSeeProblems = Yii::$app->user->isGuest; 
-        if ($cannotUserSeeProblems) {
+        if(Yii::$app->user->isGuest){
             $this->redirect(['/site/login']);
             return false;
+
         }
 
         if (!parent::beforeAction($action)) {
             return false;
         }
-        return true;
+
+        // other custom code here
+
+        return true; // or false to not run the action
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
     /**
      * Lists all User models.
-     *
-     * @return string
+     * @return mixed
      */
     public function actionIndex()
     {
         $searchModel = new ProblemSearch();
-        $dataProvider = $searchModel->searchForUser($this->request->queryParams, Yii::$app->user->identity->id);
+        $dataProvider = $searchModel->searchForUser(Yii::$app->request->queryParams, Yii::$app->user->identity->id);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -66,8 +72,8 @@ class LkController extends Controller
 
     /**
      * Displays a single User model.
-     * @param int $id ID
-     * @return string
+     * @param integer $id
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
@@ -77,34 +83,12 @@ class LkController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new User model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new RegForm();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                Yii::$app->user->login($model);
-                return $this->redirect(['/user']);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
 
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
+     * @param integer $id
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
@@ -117,16 +101,42 @@ class LkController extends Controller
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Problem the loaded model
+     * @param integer $id
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Problem::findOne(['id' => $id])) !== null) {
+        if (($model = Problem::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+    public function actionCreate()
+    {
+        $model = new ProblemCreateForm();
+
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->photoBefore = UploadedFile::getInstance($model, 'photoBefore');
+            $newFileName = md5($model->photoBefore->baseName . '.' . $model->photoBefore->extension. time()). '.' . $model->photoBefore->extension;
+            $model->photoBefore->saveAs('@app/web/uploads/' . $newFileName);
+            $model->photoBefore = $newFileName;
+            $model->idUser = Yii::$app->user->identity->id;
+            $model->save();
+            return $this->redirect(['/lk']);
+        }
+
+        $categories = Category::find()->all();
+        $categories = ArrayHelper::map($categories, 'id', 'name');
+        return $this->render('create', [
+            'model' => $model,
+            'categories' => $categories,
+        ]);
+    }
+
+
 }

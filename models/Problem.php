@@ -8,12 +8,12 @@ use Yii;
  * This is the model class for table "problem".
  *
  * @property int $id
- * @property string|null $name
- * @property string|null $description
- * @property string|null $timestamp
- * @property int|null $idUser
- * @property int|null $idCategory
- * @property string|null $status
+ * @property string $name
+ * @property string $description
+ * @property string $timestamp
+ * @property int $idUser
+ * @property int $idCategory
+ * @property string $status
  * @property string|null $photoBefore
  * @property string|null $photoAfter
  *
@@ -36,12 +36,13 @@ class Problem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'description', 'idUser', 'idCategory'], 'required'],
             [['description', 'status'], 'string'],
             [['timestamp'], 'safe'],
             [['idUser', 'idCategory'], 'integer'],
             [['name', 'photoBefore', 'photoAfter'], 'string', 'max' => 255],
-            [['idCategory'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['idCategory' => 'id']],
-            [['idUser'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['idUser' => 'id']],
+            [['idCategory'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['idCategory' => 'id']],
+            [['idUser'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['idUser' => 'id']],
         ];
     }
 
@@ -52,9 +53,9 @@ class Problem extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Имя',
+            'name' => 'Название',
             'description' => 'Описание',
-            'timestamp' => 'Дата создания',
+            'timestamp' => 'Временная метка',
             'idUser' => 'Id User',
             'idCategory' => 'Категория',
             'status' => 'Статус',
@@ -68,9 +69,9 @@ class Problem extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdCategory()
+    public function getCategory()
     {
-        return $this->hasOne(Category::class, ['id' => 'idCategory']);
+        return $this->hasOne(Category::className(), ['id' => 'idCategory']);
     }
 
     /**
@@ -80,6 +81,6 @@ class Problem extends \yii\db\ActiveRecord
      */
     public function getIdUser0()
     {
-        return $this->hasOne(User::class, ['id' => 'idUser']);
+        return $this->hasOne(User::className(), ['id' => 'idUser']);
     }
 }

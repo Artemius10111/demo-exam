@@ -1,16 +1,13 @@
 <?php
 
-use app\models\Problem;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
-/** @var yii\web\View $this */
-/** @var app\models\ProblemSearch $searchModel */
-/** @var yii\data\ActiveDataProvider $dataProvider */
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\ProblemSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Личный кабинет';
+$this->title = 'Problems';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="problem-index">
@@ -42,9 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'status',
             //'photoBefore',
             //'photoAfter',
+
             [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {delete}'
+                'class' => 'yii\grid\ActionColumn', 
+                'template' => '{view} {delete}',
             ],
         ],
     ]); ?>
