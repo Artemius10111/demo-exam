@@ -24,9 +24,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'photoBefore')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'photoBefore')->fileInput() ?>
 
-    <?= $form->field($model, 'photoAfter')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'photoAfter')->fileInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

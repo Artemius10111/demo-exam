@@ -20,7 +20,7 @@ use Yii;
  * @property Category $idCategory0
  * @property User $idUser0
  */
-class ProblemCancelForm extends Problem
+class ProblemSolveForm extends Problem
 {
 
     /**
@@ -29,12 +29,12 @@ class ProblemCancelForm extends Problem
     public function rules()
     {
         return [
-            [['reason'], 'required'],
+            [['photoAfter'], 'required'],
             // [['description', 'status'], 'string'],
             // [['timestamp'], 'safe'],
             // [['idUser', 'idCategory'], 'integer'],
-            // ['photoBefore', 'file', 'extensions' => 'png, jpg, jpeg, bmp', 'maxSize' => 10 * 1024 * 1024],
-            // [['name', 'photoBefore', 'photoAfter'], 'string', 'max' => 255],
+            ['photoAfter', 'file', 'extensions' => 'png, jpg, jpeg, bmp', 'maxSize' => 10 * 1024 * 1024],
+            // [['name', 'photoAfter', 'photoAfter'], 'string', 'max' => 255],
             // [['idCategory'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['idCategory' => 'id']],
             // [['idUser'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['idUser' => 'id']],
         ];

@@ -74,6 +74,23 @@ class Problem extends \yii\db\ActiveRecord
         return $this->hasOne(Category::className(), ['id' => 'idCategory']);
     }
 
+
+    public function actionUpdate($id)
+    {
+        $model = YourModel::findOne($id);
+    
+        // Assuming 'file' is the attribute for your file input
+        $model->file = $model->getOldAttribute('file');
+    
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     /**
      * Gets query for [[IdUser0]].
      *

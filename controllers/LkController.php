@@ -8,6 +8,8 @@ use app\models\User;
 use app\models\Category;
 use app\models\Problem;
 use app\models\ProblemCreateForm;
+use app\models\RegForm;
+use app\models\UserSearch;
 use app\models\ProblemSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -24,19 +26,19 @@ class LkController extends Controller
     {
         // your custom code here, if you want the code to run before action filters,
         // which are triggered on the [[EVENT_BEFORE_ACTION]] event, e.g. PageCache or AccessControl
-
+    
         if(Yii::$app->user->isGuest){
             $this->redirect(['/site/login']);
             return false;
-
+    
         }
-
+    
         if (!parent::beforeAction($action)) {
             return false;
         }
-
+    
         // other custom code here
-
+    
         return true; // or false to not run the action
     }
 
@@ -93,7 +95,12 @@ class LkController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if($this->findModel($id)->status == 'Новая'){
+            $this->findModel($id)->delete();
+            Yii::$app->session->setFlash('success', 'Заявка успешно удалена');
+        } else {
+            Yii::$app->session->setFlash('danger', 'Заявка не может быть удалена, т.к. её статус был изменён администратором');
+        }
 
         return $this->redirect(['index']);
     }
@@ -119,11 +126,10 @@ class LkController extends Controller
     {
         $model = new ProblemCreateForm();
 
-
         if ($model->load(Yii::$app->request->post())) {
             $model->photoBefore = UploadedFile::getInstance($model, 'photoBefore');
             $newFileName = md5($model->photoBefore->baseName . '.' . $model->photoBefore->extension. time()). '.' . $model->photoBefore->extension;
-            $model->photoBefore->saveAs('@app/web/uploads/' . $newFileName);
+            $model->photoBefore->saveAs('@webroot/uploads/' . $newFileName);
             $model->photoBefore = $newFileName;
             $model->idUser = Yii::$app->user->identity->id;
             $model->save();

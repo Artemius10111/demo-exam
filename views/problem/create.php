@@ -2,8 +2,8 @@
 
 use yii\helpers\Html;
 
-/** @var yii\web\View $this */
-/** @var app\models\Problem $model */
+/* @var $this yii\web\View */
+/* @var $model app\models\Problem */
 
 $this->title = 'Create Problem';
 $this->params['breadcrumbs'][] = ['label' => 'Problems', 'url' => ['index']];
